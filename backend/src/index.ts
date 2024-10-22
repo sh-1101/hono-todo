@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { drizzle } from "drizzle-orm/d1";
 import { todos } from "./db/schema";
+import { eq } from "drizzle-orm";
 
 type Bindings = {
   DB: D1Database;
@@ -34,6 +35,26 @@ app.post("/todos", async (c) => {
     return c.json(result);
   } catch (error) {
     return c.json({ error: "Failed to create todo" }, 500);
+  }
+});
+
+app.put("/todos/:id", async (c) => {
+  const id = parseInt(c.req.param("id"));
+
+  if (isNaN(id)) {
+    return c.json({ error: "Invalid id" }, 400);
+  }
+
+  const db = drizzle(c.env.DB);
+  try {
+    const params = await c.req.json<typeof todos.$inferSelect>();
+    const result = await db
+      .update(todos)
+      .set({ title: params.title, status: params.status })
+      .where(eq(todos.id, id));
+    return c.json(result);
+  } catch (error) {
+    return c.json({ error: "Failed to update todo" }, 500);
   }
 });
 
