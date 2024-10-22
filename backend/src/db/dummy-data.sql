@@ -1,0 +1,1 @@
+INSERT INTO todos (title) VALUES ("プログラミング"), ("散歩"), ("ジム");
