@@ -58,4 +58,20 @@ app.put("/todos/:id", async (c) => {
   }
 });
 
+app.delete("/todos/:id", async (c) => {
+  const id = parseInt(c.req.param("id"));
+
+  if (isNaN(id)) {
+    return c.json({ error: "Invalid id" }, 400);
+  }
+
+  const db = drizzle(c.env.DB);
+  try {
+    const result = await db.delete(todos).where(eq(todos.id, id));
+    return c.json(result);
+  } catch (error) {
+    return c.json({ error: "Failed to delete todo" }, 500);
+  }
+});
+
 export default app;
