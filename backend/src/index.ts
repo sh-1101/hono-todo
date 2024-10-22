@@ -23,4 +23,18 @@ app.get("/todos", async (c) => {
   }
 });
 
+app.post("/todos", async (c) => {
+  const db = drizzle(c.env.DB);
+  try {
+    const params = await c.req.json<typeof todos.$inferInsert>();
+    const result = await db
+      .insert(todos)
+      .values({ title: params.title })
+      .execute();
+    return c.json(result);
+  } catch (error) {
+    return c.json({ error: "Failed to create todo" }, 500);
+  }
+});
+
 export default app;
