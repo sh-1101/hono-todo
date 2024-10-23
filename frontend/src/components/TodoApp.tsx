@@ -1,22 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
 import TodoInput from "./TodoInput";
 import TodoList from "./TodoList";
+import { useFetchTodos } from "../hooks/query";
 
 const TodoApp = () => {
-  const {
-    data: todos,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["todos"],
-    queryFn: async () => {
-      const res = await fetch("http://localhost:8787/todos");
-      if (!res.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return res.json();
-    },
-  });
+  const { data: todos, error, isLoading } = useFetchTodos();
 
   if (isLoading) {
     return <div>Loading...</div>;
