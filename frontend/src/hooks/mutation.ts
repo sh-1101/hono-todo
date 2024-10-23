@@ -19,3 +19,18 @@ export const useAddTodo = () => {
     },
   });
 };
+
+export const useDeleteTodo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => {
+      return fetch(`${import.meta.env.VITE_API_URL}/todos/${id}`, {
+        method: "DELETE",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+};

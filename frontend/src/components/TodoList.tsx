@@ -3,13 +3,14 @@ import TodoItem from "./Todo";
 
 interface TodoListProps {
   todos: Todo[];
+  onDelete: (id: number) => void;
 }
 
-const TodoList = ({ todos }: TodoListProps) => {
+const TodoList = ({ todos, onDelete }: TodoListProps) => {
   return (
     <div className="space-y-4">
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} />
+        <TodoItem key={todo.id} todo={todo} onDelete={onDelete} />
       ))}
     </div>
   );
